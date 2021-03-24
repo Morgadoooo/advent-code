@@ -2,6 +2,8 @@ use std::collections::HashMap;
 
 use itertools::Itertools;
 
+type HashIter = Box<dyn Iterator<Item = (char, i32)>>;
+
 fn main() {
     let input_answers = include_str!("day6")
         .lines()
@@ -14,35 +16,34 @@ fn main() {
                 .map(|chars| chars.map(|c| c).collect::<Vec<char>>())
                 .into_iter()
                 .map(|v| {
-                    v.into_iter()
-                        .map(|values| {
-                            let mut m = HashMap::new();
-                            m.entry(values).or_insert_with(|| 1);
-                            m
-                        })
-                        .collect::<Vec<HashMap<_, _>>>()
+                    v.into_iter().fold(HashMap::new(), |mut acc, values| {
+                        let count = acc.entry(values).or_insert_with(|| 0);
+                        *count += 1;
+                        acc
+                    })
                 })
-                .collect::<Vec<_>>()
-                .into_iter()
-                .map(|vhm| {
-                    let mut new_hm: HashMap<char, i32> = HashMap::new();
-                    vhm.into_iter().for_each(|h| new_hm.extend(h));
-                    new_hm
-                })
-                .collect::<Vec<_>>()
+                .collect::<Vec<HashMap<char, i32>>>()
         })
-        .collect::<Vec<Vec<HashMap<char, i32>>>>()
+        .collect::<Vec<Vec<HashMap<char, i32>>>>();
+    dbg!(&input_answers);
+    let resolve1 = &input_answers
         .into_iter()
-        .map(|vhm| {
-            let mut new_hm: HashMap<char, i32> = HashMap::new();
-            vhm.into_iter().for_each(|h| new_hm.extend(h));
-            new_hm
+        .map(|v| {
+            v.into_iter()
+                .fold(Box::new(std::iter::empty()) as HashIter, |acc, hm| {
+                    Box::new(acc.chain(Box::new(hm.into_iter()) as HashIter)) as HashIter
+                })
+                .fold(HashMap::new(), |mut acc, tup| {
+                    let count = acc.entry(tup.0).or_insert_with(|| 0);
+                    *count += 1;
+                    acc
+                })
         })
-        .collect::<Vec<_>>();
-    dbg!(&input_answers
+        .collect::<Vec<_>>()
         .iter()
         .map(|v| v.keys().len())
         .collect::<Vec<_>>()
         .iter()
-        .sum::<usize>());
+        .sum::<usize>();
+    dbg!(resolve1);
 }
