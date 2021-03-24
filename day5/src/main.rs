@@ -1,10 +1,9 @@
 fn convert(bits: &Vec<usize>) -> usize {
-    let mut result: usize = 0;
-    bits.iter().for_each(|&bit| {
-        result <<= 1;
-        result ^= bit;
-    });
-    result
+    bits.iter().fold(0, |mut acc, b| {
+        acc <<= 1;
+        acc ^= b;
+        acc
+    })
 }
 
 fn main() {
@@ -20,7 +19,7 @@ fn main() {
                                 match c {
                                     'F' => 0,
                                     'B' => 1,
-                                    _ => 0,
+                                    _ => unreachable!(),
                                 }
                             };
                             binary
@@ -33,7 +32,7 @@ fn main() {
                                 match c {
                                     'L' => 0,
                                     'R' => 1,
-                                    _ => 0,
+                                    _ => unreachable!(),
                                 }
                             };
                             binary
