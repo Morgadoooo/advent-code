@@ -36,28 +36,11 @@ fn main() {
         })
         .collect::<Vec<_>>();
 
-    let resolve1 = &resolve
-        .iter()
-        .map(|v| v.keys().len())
-        .collect::<Vec<_>>()
-        .iter()
-        .sum::<usize>();
+    let resolve1 = &resolve.iter().map(|v| v.keys().len()).sum::<usize>();
 
     let resolve2 = &resolve
         .iter()
-        .map(|hm| {
-            hm.into_iter().fold(Vec::new(), |mut acc: Vec<_>, values| {
-                if values.1 == &0 {
-                    acc.push(*values.0)
-                }
-                acc
-            })
-        })
-        .collect::<Vec<_>>()
-        .into_iter()
-        .map(|v| v.len())
-        .collect::<Vec<_>>()
-        .iter()
+        .map(|hm| hm.into_iter().map(|(_, v)| *v).filter(|v| *v == 0).count())
         .sum::<usize>();
     dbg!(&resolve1);
     dbg!(&resolve2);
