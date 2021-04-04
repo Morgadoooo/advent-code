@@ -25,10 +25,10 @@ fn main() {
     let resolve = &input_answers
         .into_iter()
         .map(|v| {
-            let qpdick_size = &v.len();
+            let len = &v.len();
             v.into_iter().fold(HashMap::new(), |mut acc, hm| {
                 hm.into_iter().for_each(|(k, _)| {
-                    let count = acc.entry(k).or_insert_with(|| *qpdick_size);
+                    let count = acc.entry(k).or_insert_with(|| *len);
                     *count -= &1;
                 });
                 acc
