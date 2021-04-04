@@ -12,8 +12,8 @@ fn main() {
             identity
                 .map(str::chars)
                 .map(|v| {
-                    v.into_iter().fold(HashMap::new(), |mut acc, values| {
-                        let count = acc.entry(values).or_insert_with(|| 0);
+                    v.into_iter().fold(HashMap::new(), |mut acc, value| {
+                        let count = acc.entry(value).or_insert_with(|| 0);
                         *count += 1;
                         acc
                     })
