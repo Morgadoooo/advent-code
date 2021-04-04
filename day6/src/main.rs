@@ -25,18 +25,16 @@ fn main() {
     let resolve = &input_answers
         .into_iter()
         .map(|v| {
-            let len = &v.len();
+            let len = v.len();
             v.into_iter().fold(HashMap::new(), |mut acc, hm| {
                 hm.into_iter().for_each(|(k, _)| {
-                    let count = acc.entry(k).or_insert_with(|| *len);
-                    *count -= &1;
+                    let count = acc.entry(k).or_insert(len);
+                    *count -= 1;
                 });
                 acc
             })
         })
         .collect::<Vec<_>>();
-
-    dbg!(&resolve);
 
     let resolve1 = &resolve
         .iter()
